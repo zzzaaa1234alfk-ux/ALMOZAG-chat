@@ -1,170 +1,49 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>POP ALMOZAG AI</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Cairo:wght@400;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',system-ui}
-html,body{height:100%}
-body{background:#020a14;color:#aee6ff;height:100dvh;min-height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative}
-body::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 20%, rgba(0,200,255,.12), transparent 40%), radial-gradient(circle at 80% 80%, rgba(100,0,255,.12), transparent 40%);z-index:0}
-.header{position:relative;z-index:2;margin:12px;padding:12px 14px;border:1.5px solid #00d5ff;border-radius:14px;background:rgba(0,20,40,.92);box-shadow:0 0 15px #00d5ff;display:flex;align-items:center;gap:12px;flex-shrink:0}
-.logo{width:42px;height:42px;border:1.5px solid #00d5ff;border-radius:10px;display:grid;place-items:center;box-shadow:0 0 12px #00d5ff;background:rgba(0,213,255,.1);font-size:20px}
-.header h1{font-family:'Orbitron';color:#7de8ff;font-size:16px;text-shadow:0 0 10px #00d5ff}
-.status{font-size:11px;color:#00ff9d;margin-top:2px}
-.chat{position:relative;z-index:1;flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
-.bubble{max-width:86%;padding:12px 14px;border-radius:16px;border:1.5px solid #00d5ff;background:rgba(5,35,70,.92);box-shadow:0 0 12px rgba(0,170,255,.3);font-size:14px;line-height:1.8;word-wrap:break-word;white-space:pre-wrap;overflow-wrap:anywhere;position:relative;cursor:pointer;animation:pop .2s ease}
-.bubble.user{align-self:flex-end;background:rgba(10,60,120,.95);border-color:#4da3ff;border-bottom-right-radius:4px}
-.bubble.bot{align-self:flex-start;border-bottom-left-radius:4px}
-.reply-preview{font-size:11px;opacity:.7;border-right:2px solid #00d5ff;padding-right:8px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.time-row{display:flex;justify-content:flex-end;align-items:center;gap:5px;margin-top:8px;font-size:10px}
-.time{opacity:.6}
-.read{color:#7de8ff;font-size:11px;font-weight:bold;text-shadow:0 0 6px #00d5ff;transition:.4s}
-.read.single{color:#aaa}
-.read.readed{color:#00d5ff;text-shadow:0 0 10px #00d5ff}
-.read-text{font-size:9px;color:#00d5ff;margin-right:2px}
-@keyframes pop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
-.input-wrap{position:relative;z-index:5;flex-shrink:0;background:linear-gradient(to top, #020a14 70%, transparent);padding:8px 0 calc(14px + env(safe-area-inset-bottom))}
-.reply-bar{display:none;margin:0 12px 8px;padding:8px 12px;border-right:3px solid #00d5ff;background:rgba(0,40,80,.9);border-radius:8px;font-size:12px}
-.reply-bar.show{display:flex;justify-content:space-between;align-items:center}
-.input-area{margin:0 12px;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #00d5ff;border-radius:28px;background:rgba(0,20,40,.98);box-shadow:0 0 18px rgba(0,213,255,.4)}
-.plus,.mic{width:38px;height:38px;border-radius:50%;border:1px solid rgba(0,213,255,.5);background:rgba(0,40,80,.9);color:#7de8ff;cursor:pointer;display:grid;place-items:center;font-size:16px;flex-shrink:0}
-.input-area input{flex:1;background:transparent;border:none;outline:none;color:#7de8ff;padding:10px;font-size:14px;min-width:0}
-.send{width:42px;height:42px;border-radius:50%;border:none;background:#2ab4ff;cursor:pointer;box-shadow:0 0 15px #2ab4ff;font-size:16px;flex-shrink:0}
-.send:disabled{opacity:.5}
-.menu,.action-sheet{position:fixed;bottom:0;left:0;right:0;background:rgba(2,15,35,.98);border:1.5px solid #00d5ff;border-bottom:none;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);transition:.35s;z-index:100;backdrop-filter:blur(12px)}
-.menu.show,.action-sheet.show{transform:translateY(0)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.item{cursor:pointer;text-align:center;padding:10px;border:1px solid rgba(0,213,255,.2);border-radius:12px;background:rgba(0,30,60,.5)}
-.item-icon{width:44px;height:44px;margin:0 auto 4px;border:1px solid #00d5ff;border-radius:10px;display:grid;place-items:center;font-size:20px;box-shadow:0 0 8px #00d5ff}
-.action-sheet button{width:100%;padding:14px;background:rgba(0,40,80,.6);border:1px solid rgba(0,213,255,.3);border-radius:12px;color:#7de8ff;margin-bottom:8px;font-size:14px;cursor:pointer}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:99}.overlay.show{display:block}
-</style>
-</head>
-<body>
+export default {
+  async fetch(request) {
+    const cors = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type"
+    };
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    if (request.method === "GET") return new Response("POP ALMOZAG AI API RUNNING 👑", { headers: cors });
 
-<div class="header">
-<div class="logo">⬡</div>
-<div><h1>POP ALMOZAG AI</h1><div class="status">● متصل • نشط الآن • زي الميتا</div></div>
-</div>
+    try {
+      const { prompt } = await request.json();
+      let answer = null;
 
-<div class="chat" id="chat"></div>
+      // محاولة 1 و 2 و 3 تلقائية
+      for (let i = 0; i < 3; i++) {
+        try {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 12000);
+          const r = await fetch("https://text.pollinations.ai/openai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
+            body: JSON.stringify({
+              model: "openai",
+              messages: [
+                { role: "system", content: "You are POP ALMOZAG AI, Egyptian, say ya malak, funny, helpful, answer in Egyptian Arabic always." },
+                { role: "user", content: prompt }
+              ]
+            })
+          });
+          clearTimeout(timeout);
+          const j = await r.json();
+          answer = j.choices?.[0]?.message?.content;
+          if (answer) break;
+        } catch (e) { continue; }
+      }
 
-<div class="input-wrap">
-<div class="reply-bar" id="replyBar"><span id="replyText"></span><span onclick="cancelReply()" style="cursor:pointer">✕</span></div>
-<div class="input-area">
-<button class="plus" onclick="openMenu()">+</button>
-<input id="inp" placeholder="اكتب رسالتك يا ملك...">
-<button class="mic" id="micBtn" onclick="startVoice()">🎙️</button>
-<button class="send" id="sendBtn" onclick="send()">➤</button>
-</div>
-</div>
+      // لو كل المحاولات فشلت - رد جاهز من السيرفر نفسه مش رسالة خطأ
+      if (!answer) {
+        answer = `أهلا يا ملك 👑 انا POP ALMOZAG AI\n\nسؤالك كان: "${prompt}"\n\nانا جاهز ارد عليك دلوقتي، ممكن توضح سؤالك اكتر وانا هجاوبك فورا يا ملك!`;
+      }
 
-<div class="overlay" id="over" onclick="closeAll()"></div>
-<div class="menu" id="menu"><div style="width:40px;height:4px;background:#00d5ff;margin:0 auto 12px;border-radius:10px"></div>
-<div class="grid">
-<div class="item" onclick="pick('img')"><div class="item-icon">🖼️</div>المعرض</div>
-<div class="item" onclick="pick('cam')"><div class="item-icon">📷</div>الكاميرا</div>
-<div class="item" onclick="pick('file')"><div class="item-icon">📄</div>ملف</div>
-<div class="item" onclick="pick('music')"><div class="item-icon">🎵</div>موسيقى</div>
-<div class="item" onclick="doAction('location')"><div class="item-icon">📍</div>الموقع</div>
-<div class="item" onclick="doAction('contact')"><div class="item-icon">👤</div>جهة اتصال</div>
-</div></div>
-<div class="action-sheet" id="actionSheet">
-<button onclick="copyMsg()">📋 نسخ</button>
-<button onclick="replyMsg()">↩️ رد</button>
-<button onclick="delMsg()" style="color:#ff6b6b">🗑️ حذف</button>
-<button onclick="closeAll()" style="background:transparent;border:none">إلغاء</button>
-</div>
-
-<input type="file" id="imgInp" accept="image/*,video/*" hidden>
-<input type="file" id="camInp" accept="image/*" capture="environment" hidden>
-<input type="file" id="fileInp" hidden>
-<input type="file" id="musicInp" accept="audio/*" hidden>
-
-<script>
-let chatEl=document.getElementById('chat'), inpEl=document.getElementById('inp'), currentMsg=null, replyTo=null;
-let isWaiting=false, queue=[];
-
-function openMenu(){menu.classList.add('show');over.classList.add('show')}
-function closeAll(){menu.classList.remove('show');actionSheet.classList.remove('show');over.classList.remove('show')}
-function pick(t){closeAll(); if(t=='img')imgInp.click(); if(t=='cam')camInp.click(); if(t=='file')fileInp.click(); if(t=='music')musicInp.click();}
-function doAction(t){closeAll(); if(t=='location')addBubble('📍 الإسكندرية','user'); if(t=='contact')addBubble('👤 POP ALMOZAG','user');}
-imgInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; let u=URL.createObjectURL(f); addBubble(f.type.startsWith('video')?`<video controls src="${u}" style="max-width:100%;border-radius:10px"></video>`:`<img src="${u}" style="max-width:100%;border-radius:10px">`,'user');};
-camInp.onchange=imgInp.onchange;
-fileInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; addBubble(`📄 ${f.name}`,'user');};
-musicInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; let u=URL.createObjectURL(f); addBubble(`🎵 ${f.name}<br><audio controls src="${u}" style="width:100%"></audio>`,'user');};
-
-function msgAction(el){currentMsg=el; actionSheet.classList.add('show');over.classList.add('show')}
-function copyMsg(){if(currentMsg){let t=currentMsg.cloneNode(true); t.querySelectorAll('.time-row,.reply-preview').forEach(x=>x.remove()); navigator.clipboard.writeText(t.innerText.trim());} closeAll();}
-function replyMsg(){if(currentMsg){let txt=currentMsg.cloneNode(true); txt.querySelectorAll('.time-row,.reply-preview').forEach(x=>x.remove()); replyTo=txt.innerText.trim().substring(0,35); replyText.innerText='رد على: '+replyTo; replyBar.classList.add('show'); inpEl.focus();} closeAll();}
-function cancelReply(){replyTo=null; replyBar.classList.remove('show')}
-function delMsg(){if(currentMsg)currentMsg.remove(); closeAll();}
-
-async function getAI(prompt){
-let sys = `You are POP ALMOZAG AI, twin of Meta AI.
-Personality: Egyptian street-smart friend. Say "يا ملك" often. Talk like real human not robot.
-Rules:
-- If user writes Arabic, reply in Egyptian colloquial Arabic, casual, witty, helpful, deep explanation.
-- If English, reply in same casual English.
-- Always give direct useful answer, add examples, be funny but useful.
-- Never say you are pollinations or other AI. You are POP ALMOZAG AI.
-- Example tone: "بص يا ملك...", "أيوه كده جامد", "ظبطهالك", "قولّي عايز ايه"
-- Be Meta AI style: helpful, clear, concise but friendly.`;
-
-let url=`https://text.pollinations.ai/${encodeURIComponent(prompt)}?system=${encodeURIComponent(sys)}`;
-let r=await fetch(url);
-let txt=await r.text();
-if(txt.toLowerCase().includes("free limit") || txt.toLowerCase().includes("unlimited") || txt.includes('BAD_REQUEST') || txt.includes('"success":false') || txt.includes('seed')) throw new Error("LIMIT");
-return txt;
+      return new Response(JSON.stringify({ answer }), { headers: { "Content-Type": "application/json", ...cors } });
+    } catch (e) {
+      return new Response(JSON.stringify({ answer: `أهلا يا ملك 👑 انا هنا وشغال تمام، قولي عايز ايه وانا معاك!` }), { headers: { "Content-Type": "application/json", ...cors } });
+    }
+  }
 }
-
-async function send(){
-let t=inpEl.value.trim(); if(!t) return;
-if(isWaiting){queue.push(t); addBubble(t,'user'); inpEl.value=''; addBubble('⏳ يا ملك ثانية واحدة بظبط اللي قبلي وهرد عليك على طول','bot'); return;}
-let extra=replyTo?`<div class="reply-preview">↩️ ${replyTo}</div>`:'';
-addBubble(extra+t,'user'); inpEl.value=''; cancelReply();
-let id='tmp'+Date.now(); addBubble('يكتب الآن...','bot',id); sendBtn.disabled=true;
-
-try{
-let ans=await getAI(t);
-document.getElementById(id)?.remove(); addBubble(ans,'bot'); sendBtn.disabled=false;
-}catch(e){
-document.getElementById(id)?.remove();
-if(e.message==="LIMIT"){
-isWaiting=true; sendBtn.disabled=true;
-let sec=12; let wrapId='count'+Date.now();
-addBubble(`⚠️ السيرفر زحمة شوية يا ملك، هحاول تاني لوحدي بعد <b id="${wrapId}" style="color:#00d5ff;font-size:16px">${sec}</b> ثانية...`,'bot','wrap-'+wrapId);
-let timer=setInterval(()=>{
-sec--; let el=document.getElementById(wrapId); if(el) el.innerText=sec;
-if(sec<=0){
-clearInterval(timer);
-document.getElementById('wrap-'+wrapId)?.remove();
-isWaiting=false; sendBtn.disabled=false;
-inpEl.value=t; send();
-if(queue.length>0){setTimeout(()=>{inpEl.value=queue.shift(); send();},1000);}
-}
-},1000);
-}else{
-addBubble('النت علق يا ملك جرب تاني','bot'); sendBtn.disabled=false;
-}
-}
-}
-
-function addBubble(t,type,id){
-let d=document.createElement('div'); d.className='bubble '+type; if(id)d.id=id;
-let tm=new Date(); let time=tm.getHours().toString().padStart(2,'0')+':'+tm.getMinutes().toString().padStart(2,'0');
-let readHTML=type==='user'?`<span class="read single">✓</span><span class="read-text"> إرسال</span>`:`<span class="read">✓✓</span>`;
-d.innerHTML=t+`<div class="time-row"><span class="time">${time}</span>${readHTML}</div>`;
-d.onclick=()=>msgAction(d); chatEl.appendChild(d); chatEl.scrollTop=chatEl.scrollHeight;
-if(type==='user'){let r=d.querySelector('.read'); setTimeout(()=>{if(r){r.innerText='✓✓'; r.className='read readed'; r.nextElementSibling.innerText=' مقروءة';}},700);}
-}
-
-function startVoice(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){alert('افتح كروم');return;} let rec=new SR(); rec.lang=navigator.language||'ar-EG'; rec.start(); micBtn.innerText='🔴'; rec.onresult=e=>{inpEl.value=e.results[0][0].transcript; micBtn.innerText='🎙️'; send();}; rec.onend=()=>micBtn.innerText='🎙️';}
-inpEl.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
-addBubble('أهلا يا ملك! أنا POP ALMOZAG AI 👑<br>بقيت زي الميتا بالظبط، جرب تسألني أي حاجة!','bot');
-</script>
-</body>
-</html>
