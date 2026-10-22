@@ -1,49 +1,125 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>POP ALMOZAG AI 👑</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#0f0f13;color:#fff;font-family:sans-serif;display:flex;flex-direction:column;height:100vh}
-header{background:#1a1a22;padding:12px;display:flex;justify-content:space-between;align-items:center;color:#ff4d5a;font-weight:bold;border-bottom:2px solid #ff4d5a}
-.btns{display:flex;gap:6px} .icon{width:32px;height:32px;border-radius:8px;border:1px solid #ff4d5a;background:#222;display:grid;place-items:center;cursor:pointer}
+*{box-sizing:border-box}
+body{margin:0;background:#0f0f13;color:white;font-family:sans-serif;display:flex;flex-direction:column;height:100dvh}
+header{background:#1a1a22;padding:14px;display:flex;justify-content:space-between;align-items:center;color:#ff4d5a;font-weight:bold;border-bottom:2px solid #ff4d5a}
+.icon{width:36px;height:36px;border-radius:8px;border:1px solid #ff4d5a;background:#222;color:white;display:grid;place-items:center;cursor:pointer}
 #chat{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:85%;padding:11px 14px;border-radius:16px;line-height:1.6;white-space:pre-wrap}
+.msg{max-width:88%;padding:11px 14px;border-radius:16px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
 .user{align-self:flex-end;background:linear-gradient(135deg,#667eea,#764ba2)}
 .ai{align-self:flex-start;background:#22232f;border:1px solid #333}
+.msg img{max-width:100%;border-radius:10px;margin-top:8px}
 footer{display:flex;gap:8px;padding:10px;background:#1a1a22;border-top:1px solid #333;align-items:center}
-#inp{flex:1;padding:12px 16px;border-radius:25px;border:none;background:#2a2a36;color:#fff;outline:none}
-#send{padding:12px 18px;border-radius:25px;border:none;background:#ff4d5a;color:#fff;font-weight:bold;cursor:pointer}
+#inp{flex:1;min-width:0;padding:12px 16px;border-radius:25px;border:none;background:#2a2a36;color:white;outline:none;font-size:16px}
+#send{padding:12px 18px;border-radius:25px;border:none;background:#ff4d5a;color:white;font-weight:bold}
+#status{text-align:center;color:#aaa;font-size:12px;padding:4px}
 </style>
 </head>
 <body>
-<header><span>POP ALMOZAG AI 👑</span><div class="btns"><div class="icon" onclick="chat.innerHTML=''">🗑️</div><div class="icon" onclick="alert('شغال بدون مفتاح يا ملك 🔥')">⚙️</div></div></header>
-<div id="chat"><div class="msg ai">أهلا يا ملك 👑
-أنا POP ALMOZAG AI - النسخة الكاملة الشغالة بدون مفتاح
-📷 ابعت صورة، 🔊 هرد عليك، 🎨 وكل حاجة شغالة 🔥</div></div>
+<header>
+<span>POP ALMOZAG AI 👑</span>
+<button class="icon" id="clear">🗑️</button>
+</header>
+
+<div id="chat">
+<div class="msg ai">أهلاً يا ملك 👑🔥
+أنا POP ALMOZAG AI!
+اكتب رسالتك وخلينا نتكلم ❤️</div>
+</div>
+<div id="status">جاهز يا ملك</div>
+
 <footer>
-<label class="icon" for="file">📎</label><input id="file" type="file" accept="image/*" hidden>
-<input id="inp" placeholder="اكتب رسالتك..."><button id="send" onclick="send()">➤</button>
+<label class="icon" for="file">📎</label>
+<input id="file" type="file" accept="image/*" hidden>
+<input id="inp" placeholder="اكتب رسالتك...">
+<button id="send">➤</button>
 </footer>
+
 <script>
-const chatEl=document.getElementById('chat'), inp=document.getElementById('inp');
-let attachedImage='';
-document.getElementById('file').addEventListener('change',e=>{
- const f=e.target.files[0]; if(!f) return;
- const r=new FileReader(); r.onload=()=>{attachedImage=`<br><img src='${r.result}' style='max-width:100%;border-radius:10px;margin-top:8px'>`; chatEl.innerHTML+=`<div class='msg user'>صورة مرفقة${attachedImage}</div>`; attachedImage='';}; r.readAsDataURL(f);
-});
-async function send(){
- let t=inp.value.trim(); if(!t) return;
- chatEl.innerHTML+=`<div class="msg user">${t}</div>`; inp.value=''; chatEl.scrollTop=chatEl.scrollHeight;
- let d=document.createElement('div'); d.className='msg ai'; d.textContent='بفكر...⏳'; chatEl.appendChild(d);
- try{
-  let r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(t+' - رد بالعربي العامي المصري كملك POP ALMOZAG'));
-  d.textContent=await r.text();
-  if('speechSynthesis' in window){ let u=new SpeechSynthesisUtterance(d.textContent); u.lang='ar-EG'; speechSynthesis.speak(u); }
- }catch(e){ d.textContent='النت ضعيف يا ملك، جرب تاني ❤️'; }
- chatEl.scrollTop=chatEl.scrollHeight;
+const $=id=>document.getElementById(id);
+const chat=$('chat');
+let busy=false;
+
+function bubble(text,type){
+ const d=document.createElement('div');
+ d.className='msg '+type;
+ d.textContent=text;
+ chat.appendChild(d);
+ chat.scrollTop=chat.scrollHeight;
+ return d;
 }
-inp.addEventListener('keydown',e=>{if(e.key==='Enter')send()});
+
+$('file').onchange=()=>{
+ const f=$('file').files[0];
+ if(!f)return;
+ if(!f.type.startsWith('image/')||f.size>5*1024*1024){
+  bubble('اختار صورة صحيحة أقل من 5 ميجابايت.','ai');
+  return;
+ }
+ const d=document.createElement('div');
+ d.className='msg user';
+ d.append('📷 صورة مرفقة');
+ const img=document.createElement('img');
+ img.src=URL.createObjectURL(f);
+ d.appendChild(img);
+ chat.appendChild(d);
+ bubble('الصورة ظهرت في المحادثة، لكن تحليل الصور يحتاج خدمة تدعمه.','ai');
+ $('file').value='';
+};
+
+async function send(){
+ const text=$('inp').value.trim();
+ if(!text||busy)return;
+
+ bubble(text,'user');
+ $('inp').value='';
+ const reply=bubble('بفكر يا ملك... ⏳','ai');
+ busy=true;
+ $('send').disabled=true;
+ $('status').textContent='جاري الاتصال...';
+
+ try{
+  // خدمة خارجية، بدون مفتاح Gemini
+  const url='https://text.pollinations.ai/'+encodeURIComponent(
+   text+' - رد بالعربية العامية المصرية بشكل مفيد'
+  );
+  const response=await fetch(url);
+  if(!response.ok)throw Error('Service unavailable');
+  const answer=await response.text();
+  if(!answer.trim())throw Error('Empty response');
+
+  reply.textContent=answer;
+  $('status').textContent='تم الرد ❤️';
+
+  if('speechSynthesis' in window){
+   speechSynthesis.cancel();
+   const u=new SpeechSynthesisUtterance(answer);
+   u.lang='ar-EG';
+   speechSynthesis.speak(u);
+  }
+ }catch(e){
+  reply.textContent='الخدمة مش متاحة دلوقتي يا ملك ❤️ اتأكد من الإنترنت وجرب تاني.';
+  $('status').textContent='تعذر الاتصال';
+ }finally{
+  busy=false;
+  $('send').disabled=false;
+  chat.scrollTop=chat.scrollHeight;
+ }
+}
+
+$('send').onclick=send;
+$('inp').onkeydown=e=>{if(e.key==='Enter')send()};
+$('clear').onclick=()=>{
+ chat.replaceChildren();
+ if('speechSynthesis' in window)speechSynthesis.cancel();
+ $('status').textContent='تم مسح المحادثة';
+};
 </script>
 </body>
 </html>
