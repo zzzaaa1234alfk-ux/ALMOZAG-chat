@@ -18,7 +18,6 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 .bubble{max-width:86%;padding:12px 14px;border-radius:16px;border:1.5px solid #00d5ff;background:rgba(5,35,70,.92);box-shadow:0 0 12px rgba(0,170,255,.3);font-size:14px;line-height:1.8;word-wrap:break-word;white-space:pre-wrap;overflow-wrap:anywhere;position:relative;cursor:pointer;animation:pop .2s ease}
 .bubble.user{align-self:flex-end;background:rgba(10,60,120,.95);border-color:#4da3ff;border-bottom-right-radius:4px}
 .bubble.bot{align-self:flex-start;border-bottom-left-radius:4px}
-.bubble.waiting{opacity:.8;border-color:#ffcc00}
 .reply-preview{font-size:11px;opacity:.7;border-right:2px solid #00d5ff;padding-right:8px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .time-row{display:flex;justify-content:flex-end;align-items:center;gap:5px;margin-top:8px;font-size:10px}
 .time{opacity:.6}
@@ -48,7 +47,7 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 
 <div class="header">
 <div class="logo">⬡</div>
-<div><h1>POP ALMOZAG AI</h1><div class="status">● متصل • نشط الآن • مضاد الليميت</div></div>
+<div><h1>POP ALMOZAG AI</h1><div class="status">● متصل • نشط الآن • زي الميتا</div></div>
 </div>
 
 <div class="chat" id="chat"></div>
@@ -57,7 +56,7 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 <div class="reply-bar" id="replyBar"><span id="replyText"></span><span onclick="cancelReply()" style="cursor:pointer">✕</span></div>
 <div class="input-area">
 <button class="plus" onclick="openMenu()">+</button>
-<input id="inp" placeholder="اكتب رسالتك...">
+<input id="inp" placeholder="اكتب رسالتك يا ملك...">
 <button class="mic" id="micBtn" onclick="startVoice()">🎙️</button>
 <button class="send" id="sendBtn" onclick="send()">➤</button>
 </div>
@@ -105,11 +104,20 @@ function cancelReply(){replyTo=null; replyBar.classList.remove('show')}
 function delMsg(){if(currentMsg)currentMsg.remove(); closeAll();}
 
 async function getAI(prompt){
-let sys="You are POP ALMOZAG AI, Egyptian friendly, reply same language as user. If Arabic use Egyptian dialect ya malek, casual, all languages.";
-let url=`https://text.pollinations.ai/${encodeURIComponent(prompt)}?system=${encodeURIComponent(sys)}&model=openai&seed=${Date.now()}`;
+let sys = `You are POP ALMOZAG AI, twin of Meta AI.
+Personality: Egyptian street-smart friend. Say "يا ملك" often. Talk like real human not robot.
+Rules:
+- If user writes Arabic, reply in Egyptian colloquial Arabic, casual, witty, helpful, deep explanation.
+- If English, reply in same casual English.
+- Always give direct useful answer, add examples, be funny but useful.
+- Never say you are pollinations or other AI. You are POP ALMOZAG AI.
+- Example tone: "بص يا ملك...", "أيوه كده جامد", "ظبطهالك", "قولّي عايز ايه"
+- Be Meta AI style: helpful, clear, concise but friendly.`;
+
+let url=`https://text.pollinations.ai/${encodeURIComponent(prompt)}?system=${encodeURIComponent(sys)}`;
 let r=await fetch(url);
 let txt=await r.text();
-if(txt.toLowerCase().includes("free limit") || txt.toLowerCase().includes("unlimited replies")) throw new Error("LIMIT");
+if(txt.toLowerCase().includes("free limit") || txt.toLowerCase().includes("unlimited") || txt.includes('BAD_REQUEST') || txt.includes('"success":false') || txt.includes('seed')) throw new Error("LIMIT");
 return txt;
 }
 
@@ -127,8 +135,8 @@ document.getElementById(id)?.remove(); addBubble(ans,'bot'); sendBtn.disabled=fa
 document.getElementById(id)?.remove();
 if(e.message==="LIMIT"){
 isWaiting=true; sendBtn.disabled=true;
-let sec=15; let wrapId='count'+Date.now();
-addBubble(`⚠️ السيرفر المجاني زحمة شوية يا ملك، هحاول تاني لوحدي بعد <b id="${wrapId}" style="color:#00d5ff;font-size:16px">${sec}</b> ثانية...`,'bot','wrap-'+wrapId);
+let sec=12; let wrapId='count'+Date.now();
+addBubble(`⚠️ السيرفر زحمة شوية يا ملك، هحاول تاني لوحدي بعد <b id="${wrapId}" style="color:#00d5ff;font-size:16px">${sec}</b> ثانية...`,'bot','wrap-'+wrapId);
 let timer=setInterval(()=>{
 sec--; let el=document.getElementById(wrapId); if(el) el.innerText=sec;
 if(sec<=0){
@@ -136,7 +144,7 @@ clearInterval(timer);
 document.getElementById('wrap-'+wrapId)?.remove();
 isWaiting=false; sendBtn.disabled=false;
 inpEl.value=t; send();
-if(queue.length>0){setTimeout(()=>{inpEl.value=queue.shift(); send();},1200);}
+if(queue.length>0){setTimeout(()=>{inpEl.value=queue.shift(); send();},1000);}
 }
 },1000);
 }else{
@@ -156,7 +164,7 @@ if(type==='user'){let r=d.querySelector('.read'); setTimeout(()=>{if(r){r.innerT
 
 function startVoice(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){alert('افتح كروم');return;} let rec=new SR(); rec.lang=navigator.language||'ar-EG'; rec.start(); micBtn.innerText='🔴'; rec.onresult=e=>{inpEl.value=e.results[0][0].transcript; micBtn.innerText='🎙️'; send();}; rec.onend=()=>micBtn.innerText='🎙️';}
 inpEl.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
-addBubble('أهلا يا ملك! أنا POP ALMOZAG AI 👑<br>صلحتلك مشكلة الليميت، لو السيرفر زحمة هعد لوحدي وارجع ارد عليك، ومش هتشوف رسالة الرخمة دي تاني!','bot');
+addBubble('أهلا يا ملك! أنا POP ALMOZAG AI 👑<br>بقيت زي الميتا بالظبط، جرب تسألني أي حاجة!','bot');
 </script>
 </body>
 </html>
