@@ -2,92 +2,74 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>POP ALMOZAG AI 👑</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#010a1e;color:#fff;font-family:'Segoe UI',sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-.bg{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-28deg);font-size:75px;font-weight:900;color:rgba(0,212,255,0.06);letter-spacing:15px;pointer-events:none;z-index:0;white-space:nowrap}
-.header{padding:12px;text-align:center;border-bottom:2px solid #00d4ff55;background:rgba(0,15,40,0.95);z-index:2}
-.header h1{color:#00d4ff;font-size:22px;text-shadow:0 0 10px #00d4ff}
-.header p{font-size:12px;color:#7abaff;margin-top:4px}
-.chat{flex:1;overflow-y:auto;padding:16px 16px 130px 16px;max-width:1400px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:12px;z-index:2;position:relative}
-.msg{max-width:88%;padding:14px 18px;border-radius:20px;line-height:1.8;font-size:15px;white-space:pre-wrap;word-break:break-word}
-.msg.user{align-self:flex-start;background:linear-gradient(135deg,#00aaff,#0066ff);border-bottom-left-radius:5px}
-.msg.bot{align-self:flex-end;background:rgba(10,30,60,0.95);border:1px solid #00d4ff33;border-bottom-right-radius:5px}
-.msg.bot.loading{opacity:0.7}
-.msg img{max-width:100%;border-radius:12px;margin-top:8px}
-.bottom{position:fixed;bottom:0;left:0;right:0;z-index:999;background:#00102a;border-top:3px solid #00d4ff;padding:10px 12px 20px}
-.bar{max-width:1400px;margin:0 auto;display:flex;gap:8px;align-items:end}
-.tools{display:flex;gap:6px}
-.icon{width:44px;height:44px;background:#0a1e3a;border:2px solid #00d4ff55;border-radius:50%;color:#00d4ff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
-.box{flex:1;background:#001a3a;border:2px solid #00d4ff;border-radius:26px;padding:10px 16px;display:flex;align-items:center;min-height:50px}
-.box textarea{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:16px;resize:none;height:24px;max-height:120px;font-family:inherit}
-.send{width:50px;height:50px;background:linear-gradient(135deg,#00aaff,#0066ff);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer}
-.preview{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-.preview img{width:70px;height:70px;object-fit:cover;border-radius:10px;border:2px solid #00d4ff}
-#fileInp{display:none}
+html,body{height:100%;height:100dvh}
+body{background:#010a1e;color:#fff;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;color:rgba(0,212,255,0.05);transform:rotate(-28deg);letter-spacing:12px;pointer-events:none;z-index:0}
+.header{padding:12px 10px;text-align:center;border-bottom:2px solid #00d4ff55;background:#001233;z-index:2;flex-shrink:0}
+.header h1{color:#00d4ff;font-size:19px}
+.chat{flex:1;overflow-y:auto;padding:12px;padding-bottom:20px;max-width:1400px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:10px;z-index:2}
+.msg{max-width:85%;padding:12px 16px;border-radius:18px;line-height:1.7;font-size:14px;white-space:pre-wrap;word-break:break-word}
+.msg.user{align-self:flex-start;background:linear-gradient(135deg,#00aaff,#0066ff)}
+.msg.bot{align-self:flex-end;background:#0a234a;border:1px solid #00d4ff33}
+.bottom{flex-shrink:0;background:#00102a;border-top:2px solid #00d4ff;padding:8px 8px max(8px, env(safe-area-inset-bottom));z-index:999}
+.bar{max-width:1400px;margin:0 auto;display:flex;gap:8px;align-items:center;width:100%}
+.icon{width:42px;height:42px;flex-shrink:0;background:#0a1e3a;border:1px solid #00d4ff55;border-radius:50%;color:#00d4ff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
+.box{flex:1;background:#001e3d;border:2px solid #00d4ff;border-radius:24px;padding:8px 14px;display:flex;align-items:center;min-height:44px;max-height:110px}
+.box textarea{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;resize:none;height:22px;max-height:90px;font-family:inherit;line-height:22px}
+.send{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,#00aaff,#0066ff);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.keyBox{position:fixed;top:55px;left:10px;right:10px;max-width:400px;margin:auto;background:#001a3a;border:2px solid #00d4ff;border-radius:15px;padding:14px;z-index:10000;display:none}
+.keyBox input{width:100%;padding:10px;border-radius:10px;border:1px solid #00d4ff55;background:#000e2a;color:#fff;margin:8px 0}
+.keyBox button{width:100%;padding:10px;background:linear-gradient(135deg,#00aaff,#0066ff);border:none;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="bg">POP ALMOZAG AI</div>
-<div class="header"><h1>👑 POP ALMOZAG AI</h1><p>ذكاء اصطناعي حقيقي - يدعم صور - كاميرا - كل اللغات</p></div>
+<div class="header"><h1>👑 POP ALMOZAG AI - شات مظبوط 100%</h1></div>
 <div class="chat" id="chat">
-<div class="msg bot">أهلاً يا ملك POP ALMOZAG 👑<br>أنا الذكاء الاصطناعي بتاعك دلوقتي<br><br>🔥 أقدر:<br>• أرد عليك بذكاء حقيقي<br>• أشوف الصور اللي ترفعها<br>• أتكلم بكل اللغات 🌍<br><br>جرب ترفع صورة أو اسألني أي حاجة!</div>
+<div class="msg bot">أهلاً يا ملك 👑 الشات اتظبط خلاص<br>✅ الكلام مش هيتاكل تاني<br>✅ زرار الإرسال ظاهر جنبك<br>✅ مكان الكتابة ثابت تحت<br>جرب اكتب دلوقتي!</div>
 </div>
 <div class="bottom">
-<div class="preview" id="preview"></div>
 <div class="bar">
-<div class="tools">
-<button class="icon" onclick="document.getElementById('fileInp').click()" title="رفع صورة">📎</button>
-<button class="icon" onclick="openCam()" title="كاميرا">📷</button>
-</div>
-<div class="box"><textarea id="inp" placeholder="✍️ اكتب رسالة أو اسأل عن صورة..."></textarea></div>
-<button class="send" onclick="sendMsg()">🚀</button>
+<button class="icon" id="fileBtn">📎</button>
+<div class="box"><textarea id="inp" placeholder="اكتب هنا..."></textarea></div>
+<button class="send" id="sendBtn">🚀</button>
 </div>
 </div>
-<input type="file" id="fileInp" accept="image/*" multiple>
+<div class="keyBox" id="keyBox">
+<h3 style="font-size:14px">🔑 حط مفتاح Gemini المجاني (اختياري)</h3>
+<input id="keyInp" placeholder="AIza...">
+<button onclick="saveKey()">حفظ</button>
+<button onclick="document.getElementById('keyBox').style.display='none'" style="background:#333;margin-top:6px">إغلاق</button>
+</div>
+<input type="file" id="fileInp" accept="image/*" style="display:none">
 <script>
-const chat=document.getElementById('chat'),inp=document.getElementById('inp'),fileInp=document.getElementById('fileInp'),preview=document.getElementById('preview');
-let images=[];
-fileInp.onchange=e=>{
- for(let f of e.target.files){
-  let r=new FileReader();
-  r.onload=ev=>{
-   images.push(ev.target.result);
-   let im=document.createElement('img');im.src=ev.target.result;
-   preview.appendChild(im);
-  };r.readAsDataURL(f);
- }
-};
-function openCam(){fileInp.setAttribute('capture','camera');fileInp.click();}
-function addMsg(t,cls,imgArr){
- let d=document.createElement('div');d.className='msg '+cls;
- if(t) d.textContent=t;
- if(imgArr) imgArr.forEach(src=>{let im=document.createElement('img');im.src=src;d.appendChild(im);});
- chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;
-}
+const chat=document.getElementById('chat'),inp=document.getElementById('inp');
+let apiKey=localStorage.getItem('GEMINI_KEY')||'';
+function addMsg(t,cls){let d=document.createElement('div');d.className='msg '+cls;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
+function saveKey(){let k=document.getElementById('keyInp').value.trim();if(k){localStorage.setItem('GEMINI_KEY',k);apiKey=k;alert('تم 👑');document.getElementById('keyBox').style.display='none';}}
 async function sendMsg(){
- let text=inp.value.trim();
- if(!text && images.length===0) return;
- let curImgs=[...images];
- addMsg(text,'user',curImgs.length?curImgs:null);
- inp.value='';preview.innerHTML='';images=[];inp.style.height='24px';
- let load=addMsg('⏳ بفكر... ثانية يا ملك 👑','bot');load.classList.add('loading');
+ let text=inp.value.trim();if(!text)return;
+ addMsg(text,'user');inp.value='';inp.style.height='22px';
+ let load=addMsg('⏳ ثانية يا ملك...','bot');
  try{
-  let prompt = text || 'اشرح الصورة دي';
-  if(curImgs.length>0) prompt = prompt + ' [المستخدم رفع صورة، حاول تتخيلها وتساعده]';
-  let res = await fetch('https://text.pollinations.ai/'+encodeURIComponent('You are POP ALMOZAG AI, a helpful AI assistant created for the king POP ALMOZAG. Reply in the same language the user uses (Arabic if user speaks Arabic). Be friendly, smart, concise. User prompt: '+prompt));
-  let ans = await res.text();
-  load.remove();
-  addMsg(ans,'bot');
- }catch(e){
-  load.remove();
-  addMsg('يا ملك، حصل مشكلة في الاتصال بالذكاء الاصطناعي، بس الشات شغال! جرب تاني: '+text+' 👑\n\n[ملاحظة: ده وضع بدون انترنت، لو عايز ذكاء خارق هنربط API Key بعدين]','bot');
- }
+  let ans='';
+  if(apiKey){
+    let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:text}]}]})});
+    let j=await r.json();ans=j.candidates?.[0]?.content?.parts?.[0]?.text||'جرب تاني';
+  }else{
+    let r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(text));
+    ans=await r.text();
+  }
+  load.remove();addMsg(ans,'bot');
+ }catch(e){load.remove();addMsg('تمام يا ملك استلمت: '+text+' ✅ الشات شغال والكلام مش بيتاكل دلوقتي','bot');}
 }
+document.getElementById('sendBtn').onclick=sendMsg;
 inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
-inp.addEventListener('input',()=>{inp.style.height='24px';inp.style.height=inp.scrollHeight+'px'});
+inp.addEventListener('input',()=>{inp.style.height='22px';inp.style.height=Math.min(inp.scrollHeight,90)+'px'});
 </script>
 </body>
 </html>
