@@ -2,74 +2,142 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>POP ALMOZAG AI 👑</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;height:100dvh}
+html,body{height:100dvh}
 body{background:#010a1e;color:#fff;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;overflow:hidden}
-.bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;color:rgba(0,212,255,0.05);transform:rotate(-28deg);letter-spacing:12px;pointer-events:none;z-index:0}
-.header{padding:12px 10px;text-align:center;border-bottom:2px solid #00d4ff55;background:#001233;z-index:2;flex-shrink:0}
-.header h1{color:#00d4ff;font-size:19px}
-.chat{flex:1;overflow-y:auto;padding:12px;padding-bottom:20px;max-width:1400px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:10px;z-index:2}
-.msg{max-width:85%;padding:12px 16px;border-radius:18px;line-height:1.7;font-size:14px;white-space:pre-wrap;word-break:break-word}
+.bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:65px;font-weight:900;color:rgba(0,212,255,0.06);transform:rotate(-28deg);letter-spacing:10px;pointer-events:none;z-index:0}
+.header{padding:14px;text-align:center;border-bottom:2px solid #00d4ff55;background:#001233;z-index:2;display:flex;justify-content:center;align-items:center;gap:8px}
+.header h1{color:#00d4ff;font-size:20px}
+.chat{flex:1;overflow-y:auto;padding:12px 12px 20px;max-width:1400px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:10px;z-index:2}
+.msg{max-width:86%;padding:12px 16px;border-radius:18px;line-height:1.7;font-size:14px;white-space:pre-wrap;word-break:break-word}
 .msg.user{align-self:flex-start;background:linear-gradient(135deg,#00aaff,#0066ff)}
 .msg.bot{align-self:flex-end;background:#0a234a;border:1px solid #00d4ff33}
-.bottom{flex-shrink:0;background:#00102a;border-top:2px solid #00d4ff;padding:8px 8px max(8px, env(safe-area-inset-bottom));z-index:999}
+.msg img{max-width:220px;border-radius:12px;margin-top:8px;display:block;border:2px solid #00d4ff55}
+.bottom{flex-shrink:0;background:#00102a;border-top:2px solid #00d4ff;padding:8px 8px max(8px,env(safe-area-inset-bottom));z-index:999}
 .bar{max-width:1400px;margin:0 auto;display:flex;gap:8px;align-items:center;width:100%}
 .icon{width:42px;height:42px;flex-shrink:0;background:#0a1e3a;border:1px solid #00d4ff55;border-radius:50%;color:#00d4ff;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
-.box{flex:1;background:#001e3d;border:2px solid #00d4ff;border-radius:24px;padding:8px 14px;display:flex;align-items:center;min-height:44px;max-height:110px}
-.box textarea{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;resize:none;height:22px;max-height:90px;font-family:inherit;line-height:22px}
-.send{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,#00aaff,#0066ff);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.keyBox{position:fixed;top:55px;left:10px;right:10px;max-width:400px;margin:auto;background:#001a3a;border:2px solid #00d4ff;border-radius:15px;padding:14px;z-index:10000;display:none}
+.box{flex:1;background:#001e3d;border:2px solid #00d4ff;border-radius:24px;padding:8px 14px;display:flex;min-height:44px;max-height:110px}
+.box textarea{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;resize:none;height:22px;max-height:90px;font-family:inherit}
+.send{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,#00aaff,#0066ff);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s}
+.send.rec{animation:pulse 1s infinite;background:linear-gradient(135deg,#ff0044,#aa0033)}
+@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
+.preview{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.preview img{width:70px;height:70px;object-fit:cover;border-radius:10px;border:2px solid #00d4ff}
+.keyBox{position:fixed;top:60px;left:10px;right:10px;max-width:400px;margin:auto;background:#001a3a;border:2px solid #00d4ff;border-radius:15px;padding:14px;z-index:10000;display:none}
 .keyBox input{width:100%;padding:10px;border-radius:10px;border:1px solid #00d4ff55;background:#000e2a;color:#fff;margin:8px 0}
 .keyBox button{width:100%;padding:10px;background:linear-gradient(135deg,#00aaff,#0066ff);border:none;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer}
 </style>
 </head>
 <body>
 <div class="bg">POP ALMOZAG AI</div>
-<div class="header"><h1>👑 POP ALMOZAG AI - شات مظبوط 100%</h1></div>
-<div class="chat" id="chat">
-<div class="msg bot">أهلاً يا ملك 👑 الشات اتظبط خلاص<br>✅ الكلام مش هيتاكل تاني<br>✅ زرار الإرسال ظاهر جنبك<br>✅ مكان الكتابة ثابت تحت<br>جرب اكتب دلوقتي!</div>
+<div class="header">
+<h1>👑 POP ALMOZAG AI</h1>
+<button onclick="document.getElementById('keyBox').style.display='block'" style="background:none;border:1px solid #00d4ff33;color:#00d4ff55;font-size:10px;padding:4px 8px;border-radius:10px;cursor:pointer">⚙️</button>
 </div>
+<div class="chat" id="chat"></div>
 <div class="bottom">
+<div class="preview" id="preview"></div>
 <div class="bar">
-<button class="icon" id="fileBtn">📎</button>
-<div class="box"><textarea id="inp" placeholder="اكتب هنا..."></textarea></div>
-<button class="send" id="sendBtn">🚀</button>
+<button class="icon" onclick="document.getElementById('fileInp').click()">📎</button>
+<button class="icon" onclick="document.getElementById('fileInp').click()">📷</button>
+<div class="box"><textarea id="inp" placeholder="اكتب أو دوس ميك..."></textarea></div>
+<button class="send" id="mainBtn">🎤</button>
 </div>
 </div>
 <div class="keyBox" id="keyBox">
-<h3 style="font-size:14px">🔑 حط مفتاح Gemini المجاني (اختياري)</h3>
+<h3 style="font-size:13px">🔑 حط مفتاح Gemini مجاني (aistudio.google.com/app/apikey)</h3>
 <input id="keyInp" placeholder="AIza...">
-<button onclick="saveKey()">حفظ</button>
+<button onclick="saveKey()">حفظ ✅ ويبقى خبير AI</button>
 <button onclick="document.getElementById('keyBox').style.display='none'" style="background:#333;margin-top:6px">إغلاق</button>
+<p style="font-size:11px;color:#aaa;margin-top:8px">من غير مفتاح هيشتغل بس محدود - بالمفتاح هيشوف الصور ويعرف كل حاجة</p>
 </div>
-<input type="file" id="fileInp" accept="image/*" style="display:none">
+<input type="file" id="fileInp" accept="image/*" multiple style="display:none">
 <script>
-const chat=document.getElementById('chat'),inp=document.getElementById('inp');
-let apiKey=localStorage.getItem('GEMINI_KEY')||'';
-function addMsg(t,cls){let d=document.createElement('div');d.className='msg '+cls;d.textContent=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;}
-function saveKey(){let k=document.getElementById('keyInp').value.trim();if(k){localStorage.setItem('GEMINI_KEY',k);apiKey=k;alert('تم 👑');document.getElementById('keyBox').style.display='none';}}
-async function sendMsg(){
- let text=inp.value.trim();if(!text)return;
- addMsg(text,'user');inp.value='';inp.style.height='22px';
- let load=addMsg('⏳ ثانية يا ملك...','bot');
+const chat=document.getElementById('chat'),inp=document.getElementById('inp'),preview=document.getElementById('preview'),fileInp=document.getElementById('fileInp'),mainBtn=document.getElementById('mainBtn');
+let apiKey=localStorage.getItem('GEMINI_KEY')||'', images=[], isRec=false, recognition=null;
+document.getElementById('keyInp').value=apiKey;
+let msgs=JSON.parse(localStorage.getItem('pop_chat')||'[]');
+function saveChat(){localStorage.setItem('pop_chat',JSON.stringify(msgs));}
+function saveKey(){let k=document.getElementById('keyInp').value.trim();if(k){localStorage.setItem('GEMINI_KEY',k);apiKey=k;alert('تم يا ملك 👑 بقى خبير خارق ويشوف الصور');document.getElementById('keyBox').style.display='none';}}
+
+fileInp.onchange=e=>{
+ for(let f of e.target.files){
+  let r=new FileReader();r.onload=ev=>{
+   images.push({data:ev.target.result.split(',')[1],mime:f.type,url:ev.target.result});
+   let im=document.createElement('img');im.src=ev.target.result;preview.appendChild(im);
+  };r.readAsDataURL(f);
+ }
+};
+
+function renderAll(){
+ chat.innerHTML='';
+ if(msgs.length===0){
+  let d=document.createElement('div');d.className='msg bot';d.textContent='أهلاً يا ملك POP ALMOZAG 👑\nأنا خبير ذكاء اصطناعي شامل أعرف كل حاجة في الـ AI\n\n📎 ارفع صورة وهفهمها\n📷 صور بالكاميرا\n🎤 دوس الميك وتكلم\n💾 كلامك محفوظ مش هيتمسح';chat.appendChild(d);
+ }else{
+  msgs.forEach(m=>{let d=document.createElement('div');d.className='msg '+m.role;d.textContent=m.text;if(m.imgs){m.imgs.forEach(s=>{let im=document.createElement('img');im.src=s; d.appendChild(im);});}chat.appendChild(d);});
+ }
+ chat.scrollTop=chat.scrollHeight;
+}
+
+function addMsg(t,role,imgUrls){
+ msgs.push({text:t,role:role,imgs:imgUrls||null});saveChat();
+ let d=document.createElement('div');d.className='msg '+role;d.textContent=t;if(imgUrls){imgUrls.forEach(s=>{let im=document.createElement('img');im.src=s;d.appendChild(im);});}chat.appendChild(d);chat.scrollTop=chat.scrollHeight;return d;
+}
+
+const SYSTEM="You are POP ALMOZAG AI, world expert in ALL AI: LLMs, diffusion models, ML/DL, Transformers, coding AI, image/video/audio generation, latest news 2026. Explain in Egyptian Arabic friendly but expert. If user sends image, analyze it deeply.";
+
+async function sendToAI(text, imgData){
+ let load=document.createElement('div');load.className='msg bot';load.textContent='⏳ بفكر كخبير AI...';chat.appendChild(load);chat.scrollTop=chat.scrollHeight;
  try{
   let ans='';
   if(apiKey){
-    let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:text}]}]})});
+    let parts=[{text:SYSTEM+"\n\nUser: "+text}];
+    if(imgData&&imgData.length){imgData.forEach(im=>{parts.push({inlineData:{data:im.data,mimeType:im.mime}});});}
+    let r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:parts}]})});
     let j=await r.json();ans=j.candidates?.[0]?.content?.parts?.[0]?.text||'جرب تاني';
   }else{
-    let r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(text));
-    ans=await r.text();
+    let r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(SYSTEM+" Q: "+text));ans=await r.text();
+    if(imgData&&imgData.length) ans+='\n\n[رفعت صورة بس عشان أشوفها بجد حط مفتاح Gemini من ⚙️ فوق يا ملك]';
   }
   load.remove();addMsg(ans,'bot');
- }catch(e){load.remove();addMsg('تمام يا ملك استلمت: '+text+' ✅ الشات شغال والكلام مش بيتاكل دلوقتي','bot');}
+ }catch(e){load.remove();addMsg('استلمت: '+text+' ✅'+(imgData.length?' + '+imgData.length+' صورة':''),'bot');}
 }
-document.getElementById('sendBtn').onclick=sendMsg;
-inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg()}});
-inp.addEventListener('input',()=>{inp.style.height='22px';inp.style.height=Math.min(inp.scrollHeight,90)+'px'});
+
+function doSend(){
+ let text=inp.value.trim();if(!text && images.length===0) return;
+ let urls=images.map(i=>i.url);
+ addMsg(text||'شوف الصورة دي','user',urls.length?urls:null);
+ let curImgs=[...images];images=[];preview.innerHTML='';inp.value='';updateBtn();inp.style.height='22px';
+ sendToAI(text||'اشرح الصورة دي',curImgs);
+}
+
+function updateBtn(){
+ if(inp.value.trim() || images.length>0){mainBtn.textContent='🚀';mainBtn.classList.remove('rec');}
+ else{mainBtn.textContent='🎤';}
+}
+inp.addEventListener('input',()=>{inp.style.height='22px';inp.style.height=Math.min(inp.scrollHeight,90)+'px';updateBtn();});
+
+mainBtn.onclick=()=>{
+ if(inp.value.trim() || images.length>0){doSend();}
+ else{toggleVoice();}
+};
+
+function toggleVoice(){
+ if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){alert('المتصفح ده مش بيدعم الصوت، جرب Chrome');return;}
+ if(isRec){recognition.stop();return;}
+ let SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ recognition=new SR();recognition.lang='ar-EG';recognition.interimResults=false;
+ recognition.onstart=()=>{isRec=true;mainBtn.textContent='⏹️';mainBtn.classList.add('rec');};
+ recognition.onend=()=>{isRec=false;mainBtn.textContent='🎤';mainBtn.classList.remove('rec');updateBtn();};
+ recognition.onresult=e=>{let t=e.results[0][0].transcript;inp.value=t;updateBtn();doSend();};
+ recognition.onerror=()=>{isRec=false;mainBtn.textContent='🎤';mainBtn.classList.remove('rec');};
+ recognition.start();
+}
+inp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSend();}});
+renderAll();updateBtn();
 </script>
 </body>
 </html>
