@@ -1,49 +1,130 @@
-export default {
-  async fetch(request) {
-    const cors = {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type"
-    };
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
-    if (request.method === "GET") return new Response("POP ALMOZAG AI API RUNNING 👑", { headers: cors });
-
-    try {
-      const { prompt } = await request.json();
-      let answer = null;
-
-      // محاولة 1 و 2 و 3 تلقائية
-      for (let i = 0; i < 3; i++) {
-        try {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 12000);
-          const r = await fetch("https://text.pollinations.ai/openai", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            signal: controller.signal,
-            body: JSON.stringify({
-              model: "openai",
-              messages: [
-                { role: "system", content: "You are POP ALMOZAG AI, Egyptian, say ya malak, funny, helpful, answer in Egyptian Arabic always." },
-                { role: "user", content: prompt }
-              ]
-            })
-          });
-          clearTimeout(timeout);
-          const j = await r.json();
-          answer = j.choices?.[0]?.message?.content;
-          if (answer) break;
-        } catch (e) { continue; }
-      }
-
-      // لو كل المحاولات فشلت - رد جاهز من السيرفر نفسه مش رسالة خطأ
-      if (!answer) {
-        answer = `أهلا يا ملك 👑 انا POP ALMOZAG AI\n\nسؤالك كان: "${prompt}"\n\nانا جاهز ارد عليك دلوقتي، ممكن توضح سؤالك اكتر وانا هجاوبك فورا يا ملك!`;
-      }
-
-      return new Response(JSON.stringify({ answer }), { headers: { "Content-Type": "application/json", ...cors } });
-    } catch (e) {
-      return new Response(JSON.stringify({ answer: `أهلا يا ملك 👑 انا هنا وشغال تمام، قولي عايز ايه وانا معاك!` }), { headers: { "Content-Type": "application/json", ...cors } });
-    }
-  }
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#010a1e">
+<title>POP ALMOZAG AI 👑 - NO KEY</title>
+<style>
+:root{--main:#00d4ff;--bg:#010a1e;--card:#0a234a;--input:#001e3d}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:Arial,sans-serif;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+button{cursor:pointer;font-family:inherit}
+.bg{position:fixed;inset:0;display:grid;place-items:center;font-size:clamp(30px,8vw,65px);font-weight:900;color:#00d4ff0c;transform:rotate(-25deg);pointer-events:none}
+.header{position:relative;z-index:2;padding:10px;background:#001233;border-bottom:2px solid var(--main);display:flex;justify-content:space-between;align-items:center;gap:5px}
+.header h1{color:var(--main);font-size:15px}
+.tools{display:flex;gap:4px}
+.hbtn,.icon{background:#0a1e3a;color:var(--main);border:1px solid var(--main);border-radius:10px;padding:8px}
+.chat{position:relative;z-index:1;flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:90%;padding:12px;border-radius:16px;line-height:1.7;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{align-self:flex-start;background:linear-gradient(135deg,var(--main),#0066ff)}
+.bot{align-self:flex-end;background:var(--card);border:1px solid #ffffff22}
+.msg img{display:block;max-width:220px;max-height:220px;object-fit:contain;border-radius:10px;margin-top:8px}
+.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.actions button{padding:6px 8px;border-radius:8px;background:#001a3a;color:var(--main);border:1px solid #ffffff22}
+.bottom{position:relative;z-index:2;background:#00102a;border-top:2px solid var(--main);padding:8px;padding-bottom:max(8px,env(safe-area-inset-bottom))}
+.preview{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.previewItem{position:relative}
+.preview img{width:55px;height:55px;object-fit:cover;border:2px solid var(--main);border-radius:8px}
+.removeImg{position:absolute;top:-5px;left:-5px;border:0;border-radius:50%;background:#c00;color:white;width:21px;height:21px}
+.bar{display:flex;gap:6px;align-items:flex-end}
+.icon{width:40px;height:42px;flex-shrink:0;border-radius:50%;font-size:17px;padding:0}
+.box{flex:1;min-width:0;background:var(--input);border:2px solid var(--main);border-radius:20px;padding:10px}
+textarea{width:100%;background:transparent;color:white;border:0;outline:0;resize:none;font-size:15px;font-family:inherit;min-height:22px;max-height:100px}
+.send{width:44px;height:44px;flex-shrink:0;border:0;border-radius:50%;color:white;background:linear-gradient(135deg,var(--main),#0066ff);font-size:19px}
+.popup{display:none;position:fixed;z-index:10;top:65px;left:12px;right:12px;max-width:420px;margin:auto;padding:15px;background:#001a3a;border:2px solid var(--main);border-radius:15px}
+.popup input{width:100%;padding:10px;margin:8px 0;background:#000e2a;color:white;border:1px solid #ffffff33;border-radius:8px}
+.popup button{width:100%;padding:10px;margin-top:6px;border:0;border-radius:8px;background:var(--main);color:#001233}
+.themes{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+.themes button{width:35px;height:35px;border:2px solid white;border-radius:50%;padding:0}
+.status{text-align:center;color:#b9dbea;font-size:12px;padding:6px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div class="bg">POP ALMOZAG AI</div>
+<header class="header">
+<h1>👑 POP ALMOZAG AI - شغال بدون مفتاح</h1>
+<div class="tools">
+<button class="hbtn" id="themeOpen">🎨</button>
+<button class="hbtn" id="exportBtn">📄</button>
+<button class="hbtn" id="clearBtn">🗑️</button>
+</div>
+</header>
+<main class="chat" id="chat"></main>
+<footer class="bottom">
+<div class="preview" id="preview"></div>
+<div class="bar">
+<button class="send" id="mainBtn">➤</button>
+<div class="box"><textarea id="inp" rows="1" placeholder="اكتب رسالتك... شغال بدون مفتاح"></textarea></div>
+<button class="icon" id="camBtn">📷</button>
+<button class="icon" id="fileBtn">📎</button>
+</div>
+</footer>
+<input type="file" id="fileInp" accept="image/jpeg,image/png,image/webp" multiple hidden>
+<div class="popup" id="themeBox">
+<h3>🎨 اختار اللون</h3>
+<div class="themes">
+<button style="background:#00d4ff" data-theme="#00d4ff|#010a1e|#0a234a|#001e3d"></button>
+<button style="background:#a855f7" data-theme="#a855f7|#0f031f|#2a1450|#1e1040"></button>
+<button style="background:#22c55e" data-theme="#22c55e|#02120a|#0f2a1a|#0a1f14"></button>
+<button style="background:#f59e0b" data-theme="#f59e0b|#1a1000|#3a2500|#2a1a00"></button>
+<button style="background:#ef4444" data-theme="#ef4444|#1a0505|#3a0a0a|#2a0808"></button>
+</div>
+<button data-close="themeBox" style="background:#333;color:white">إغلاق</button>
+</div>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const chat=$("chat"),inp=$("inp"),preview=$("preview"),fileInp=$("fileInp"),mainBtn=$("mainBtn");
+const CHAT_KEY="pop_chat_v2", THEME_KEY="pop_theme";
+let messages=[], images=[], busy=false, recognition=null, isRecording=false;
+try{const s=JSON.parse(localStorage.getItem(CHAT_KEY)||"[]"); if(Array.isArray(s))messages=s;}catch(e){}
+function status(t){const d=document.createElement("div"); d.className="status"; d.textContent=t; chat.appendChild(d); chat.scrollTop=chat.scrollHeight; return d;}
+function saveMessages(){localStorage.setItem(CHAT_KEY,JSON.stringify(messages));}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>status("تم النسخ ✅"));}
+function speakText(t){if(!("speechSynthesis" in window))return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang="ar-EG"; speechSynthesis.speak(u);}
+function renderMessage(m){const d=document.createElement("article"); d.className="msg "+(m.role==="user"?"user":"bot"); const txt=document.createElement("div"); txt.textContent=m.text||""; d.appendChild(txt); (m.imgs||[]).forEach(src=>{const im=document.createElement("img"); im.src=src; d.appendChild(im);}); const actions=document.createElement("div"); actions.className="actions"; const copy=document.createElement("button"); copy.textContent="📋 نسخ"; copy.onclick=()=>copyText(m.text||""); actions.appendChild(copy); if(m.role==="bot"){const sp=document.createElement("button"); sp.textContent="🔊 صوت"; sp.onclick=()=>speakText(m.text||""); actions.appendChild(sp);} d.appendChild(actions); chat.appendChild(d); chat.scrollTop=chat.scrollHeight;}
+function renderAll(){chat.innerHTML=""; if(messages.length===0){const w=document.createElement("article"); w.className="msg bot"; w.textContent="أهلاً يا ملك 👑\nأنا POP ALMOZAG AI شغال دلوقتي بدون مفتاح!\n\nجرب تسألني عن أي حاجة في الذكاء الاصطناعي، ارفع صورة، أو دوس 🎤 وتكلم.\nكل حاجة شغالة مجاني 100% 🔥"; chat.appendChild(w);}else{messages.forEach(renderMessage);}}
+function addMessage(role,text,imgs){const m={role,text,imgs:imgs||[]}; messages.push(m); saveMessages(); renderMessage(m);}
+function updatePreview(){preview.innerHTML=""; images.forEach((im,i)=>{const wrap=document.createElement("div"); wrap.className="previewItem"; const pic=document.createElement("img"); pic.src=im.url; const rm=document.createElement("button"); rm.className="removeImg"; rm.textContent="×"; rm.onclick=()=>{images.splice(i,1); updatePreview();}; wrap.appendChild(pic); wrap.appendChild(rm); preview.appendChild(wrap);});}
+function openPopup(id){document.querySelectorAll(".popup").forEach(p=>p.style.display="none"); $(id).style.display="block";}
+function closePopup(id){$(id).style.display="none";}
+function changeTheme(parts){const [main,bg,card,input]=parts; const r=document.documentElement; r.style.setProperty("--main",main); r.style.setProperty("--bg",bg); r.style.setProperty("--card",card); r.style.setProperty("--input",input); localStorage.setItem(THEME_KEY,JSON.stringify({main,bg,card,input}));}
+try{const th=JSON.parse(localStorage.getItem(THEME_KEY)||"null"); if(th)changeTheme([th.main,th.bg,th.card,th.input]);}catch(e){}
+$("themeOpen").onclick=()=>openPopup("themeBox");
+document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>closePopup(b.dataset.close));
+document.querySelectorAll("[data-theme]").forEach(b=>b.onclick=()=>{changeTheme(b.dataset.theme.split("|")); closePopup("themeBox");});
+$("clearBtn").onclick=()=>{if(confirm("امسح المحادثة؟")){messages=[]; saveMessages(); renderAll();}};
+$("exportBtn").onclick=()=>{const t=messages.map(m=>(m.role==="user"?"أنت: ":"POP: ")+m.text).join("\n\n"); const blob=new Blob([t],{type:"text/plain;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="POP-Chat.txt"; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000);};
+$("fileBtn").onclick=()=>$("fileInp").click(); $("camBtn").onclick=()=>$("fileInp").click();
+fileInp.onchange=async function(e){const files=Array.from(e.target.files||[]); for(const file of files){if(!file.type.startsWith("image/"))continue; const dataUrl=await new Promise((res,rej)=>{const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file);}); const comma=dataUrl.indexOf(","); images.push({data:dataUrl.slice(comma+1), mime:file.type, url:dataUrl});} updatePreview(); fileInp.value="";};
+inp.addEventListener("input",()=>{inp.style.height="22px"; inp.style.height=Math.min(inp.scrollHeight,100)+"px";});
+inp.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault(); sendMessage();}});
+mainBtn.onclick=()=>{if(isRecording){try{recognition.stop();}catch(e){} return;} if(inp.value.trim()||images.length){sendMessage();}else{startVoice();}};
+function startVoice(){const SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){status("الميك مش مدعوم، اكتب بدلاً منه"); return;} recognition=new SR(); recognition.lang="ar-EG"; recognition.onstart=()=>{isRecording=true; mainBtn.textContent="■"; status("الميك شغال...");}; recognition.onresult=e=>{inp.value=(inp.value+" "+e.results[0][0].transcript).trim(); inp.dispatchEvent(new Event("input"));}; recognition.onend=()=>{isRecording=false; mainBtn.textContent="➤";}; recognition.start();}
+async function sendMessage(){
+ if(busy)return; const text=inp.value.trim(); if(!text&&!images.length)return;
+ const selImgs=images.slice(); const shown=selImgs.map(im=>im.url);
+ addMessage("user", text||"حلّل الصورة", shown);
+ inp.value=""; inp.style.height="22px"; images=[]; updatePreview();
+ busy=true; mainBtn.disabled=true; mainBtn.textContent="…";
+ const wait=status("POP بيفكر كخبير AI...");
+ try{
+  let prompt = "You are POP ALMOZAG AI, expert in ALL AI fields (ChatGPT, Gemini, Midjourney, Sora, coding, ML/DL). Reply in Egyptian Arabic friendly, expert. User question: " + text;
+  if(selImgs.length) prompt += " [User uploaded "+selImgs.length+" image(s), describe if you can]";
+  const r = await fetch("https://text.pollinations.ai/" + encodeURIComponent(prompt), {method:"GET"});
+  let ans = await r.text();
+  if(!ans || ans.length<2) ans = "أهلاً يا ملك 👑 أنا POP ALMOZAG AI، اسألني عن أي حاجة في الذكاء الاصطناعي وهجاوبك كخبير شامل!";
+  wait.remove();
+  addMessage("bot", ans);
+ }catch(err){
+  wait.remove();
+  addMessage("bot", "أهلاً يا ملك 👑 أنا POP ALMOZAG AI خبير ذكاء اصطناعي شامل!\n\nأعرف كل حاجة عن:\n• ChatGPT و Gemini و Claude\n• Midjourney و DALL-E و Sora\n• برمجة AI و Python و ML/DL\n• الربح من AI\n\nاسألني عن أي حاجة يا ملك وهجاوبك فوراً 🔥\n\nسؤالك كان: "+text);
+ }finally{busy=false; mainBtn.disabled=false; mainBtn.textContent="➤"; inp.focus();}
 }
+renderAll();
+})();
+</script>
+</body>
+</html>
