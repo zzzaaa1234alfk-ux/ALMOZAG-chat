@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POP ALMOZAG Chat</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+body{height:100vh;background:#000;display:flex;flex-direction:column;position:relative;overflow:hidden}
+body::before{content:'';position:absolute;inset:0;background: radial-gradient(circle at center, rgba(0,191,255,0.15), #000 80%);z-index:0}
+.header{position:relative;z-index:1;background:rgba(15,15,15,0.95);border-bottom:2px solid #00BFFF;padding:12px 16px;display:flex;align-items:center;gap:12px;box-shadow:0 0 20px rgba(0,191,255,0.4)}
+.header h1{font-size:18px;color:#00BFFF;text-shadow:0 0 8px #00BFFF}
+.header span{color:#aaa;font-size:12px}
+.chat-container{position:relative;z-index:1;flex:1;overflow-y:auto;padding:20px 14px;display:flex;flex-direction:column;gap:12px}
+.welcome{text-align:center;background:linear-gradient(135deg, rgba(0,191,255,0.15), rgba(0,0,0,0.7));border:1px solid #00BFFF;border-radius:18px;padding:22px;margin:10px auto;max-width:92%;box-shadow:0 0 25px rgba(0,191,255,0.3)}
+.welcome h2{color:#fff;font-size:23px;margin-bottom:8px;text-shadow:0 0 10px #00BFFF}
+.welcome h2 b{color:#00BFFF}
+.welcome p{color:#aaa;font-size:13px}
+.bubble{max-width:82%;padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.7;white-space:pre-wrap;animation:pop .3s ease}
+@keyframes pop{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.user{align-self:flex-start;background:#1A3A5F;color:#fff;border-bottom-right-radius:4px}
+.ai{align-self:flex-end;background:rgba(15,15,15,0.9);color:#00BFFF;border:1px solid #00BFFF;border-bottom-left-radius:4px;box-shadow:0 0 10px rgba(0,191,255,0.2)}
+.input-area{position:relative;z-index:1;background:rgba(15,15,15,0.95);border-top:1px solid #00BFFF;padding:12px;display:flex;gap:8px}
+.input-area input{flex:1;background:#0A0A0A;border:1px solid #333;border-radius:25px;padding:12px 18px;color:#fff;outline:none}
+.input-area input:focus{border-color:#00BFFF}
+.input-area button{background:linear-gradient(135deg,#00BFFF,#0080FF);border:none;border-radius:50%;width:48px;height:48px;color:#000;font-size:20px;font-weight:900;cursor:pointer;box-shadow:0 0 15px #00BFFF}
+.typing{color:#00BFFF;font-size:12px;padding:0 14px;position:relative;z-index:1;display:none}
+</style>
+</head>
+<body>
+<div class="header"><div><h1>POP ALMOZAG AI 👑</h1><span>● متصل الآن</span></div></div>
+<div class="chat-container" id="chat">
+<div class="welcome"><h2>أهلا بك في شات <b>𝓟𝓞𝓟 𝓐𝓛𝓜𝓞𝓩𝓐𝓖</b> 👑</h2><p>أنا مساعدك الذكي - اسألني عن البرمجة، الحماية، الاختراق الأخلاقي</p></div>
+</div>
+<div class="typing" id="typing">POP ALMOZAG يكتب الآن...</div>
+<div class="input-area"><input id="msg" type="text" placeholder="اكتب رسالتك..." onkeypress="if(event.key==='Enter')send()"><button onclick="send()">➤</button></div>
+<script>
+const chat=document.getElementById('chat'),input=document.getElementById('msg'),typing=document.getElementById('typing');
+const qaMap={"السلام عليكم":"وعليكم السلام يا بوب 👑 أهلا بيك في مملكة POP ALMOZAG!","ازيك":"الحمد لله بخير يا ملك انت عامل ايه؟","جافا":"public class Main{public static void main(String[] args){System.out.println(\"POP ALMOZAG\");}}","بايثون":"print(\"POP ALMOZAG\")","حماية":"1- فعل التحقق بخطوتين 2- غير باسوردك","بوب المزاج":"أنا POP ALMOZAG ملك الظلام والنيون الأزرق 👑💙"};
+function addBubble(t,w){const d=document.createElement('div');d.className='bubble '+w;d.innerText=t;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function send(){const text=input.value.trim();if(!text)return;addBubble(text,'user');input.value='';typing.style.display='block';setTimeout(()=>{typing.style.display='none';let a=null;for(let k in qaMap){if(text.includes(k)){a=qaMap[k];break}}if(!a){a="فهمتك يا بوب 👑 عن \""+text+"\" جرب كلمات: جافا، بايثون، حماية، بوب المزاج"}addBubble(a,'ai')},800)}
+</script>
+</body>
+</html>
