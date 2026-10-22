@@ -18,9 +18,10 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 .bubble{max-width:86%;padding:12px 14px;border-radius:16px;border:1.5px solid #00d5ff;background:rgba(5,35,70,.92);box-shadow:0 0 12px rgba(0,170,255,.3);font-size:14px;line-height:1.8;word-wrap:break-word;white-space:pre-wrap;overflow-wrap:anywhere;position:relative;cursor:pointer;animation:pop .2s ease}
 .bubble.user{align-self:flex-end;background:rgba(10,60,120,.95);border-color:#4da3ff;border-bottom-right-radius:4px}
 .bubble.bot{align-self:flex-start;border-bottom-left-radius:4px}
+.bubble.waiting{opacity:.8;border-color:#ffcc00}
 .reply-preview{font-size:11px;opacity:.7;border-right:2px solid #00d5ff;padding-right:8px;margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .time-row{display:flex;justify-content:flex-end;align-items:center;gap:5px;margin-top:8px;font-size:10px}
-.time-row .time{opacity:.6}
+.time{opacity:.6}
 .read{color:#7de8ff;font-size:11px;font-weight:bold;text-shadow:0 0 6px #00d5ff;transition:.4s}
 .read.single{color:#aaa}
 .read.readed{color:#00d5ff;text-shadow:0 0 10px #00d5ff}
@@ -32,15 +33,13 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 .input-area{margin:0 12px;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid #00d5ff;border-radius:28px;background:rgba(0,20,40,.98);box-shadow:0 0 18px rgba(0,213,255,.4)}
 .plus,.mic{width:38px;height:38px;border-radius:50%;border:1px solid rgba(0,213,255,.5);background:rgba(0,40,80,.9);color:#7de8ff;cursor:pointer;display:grid;place-items:center;font-size:16px;flex-shrink:0}
 .input-area input{flex:1;background:transparent;border:none;outline:none;color:#7de8ff;padding:10px;font-size:14px;min-width:0}
-.input-area input::placeholder{color:rgba(125,232,255,.5)}
 .send{width:42px;height:42px;border-radius:50%;border:none;background:#2ab4ff;cursor:pointer;box-shadow:0 0 15px #2ab4ff;font-size:16px;flex-shrink:0}
-.menu{position:fixed;bottom:0;left:0;right:0;background:rgba(2,15,35,.98);border:1.5px solid #00d5ff;border-bottom:none;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);transition:.35s;z-index:100;backdrop-filter:blur(12px)}
-.menu.show{transform:translateY(0)}
+.send:disabled{opacity:.5}
+.menu,.action-sheet{position:fixed;bottom:0;left:0;right:0;background:rgba(2,15,35,.98);border:1.5px solid #00d5ff;border-bottom:none;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);transition:.35s;z-index:100;backdrop-filter:blur(12px)}
+.menu.show,.action-sheet.show{transform:translateY(0)}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .item{cursor:pointer;text-align:center;padding:10px;border:1px solid rgba(0,213,255,.2);border-radius:12px;background:rgba(0,30,60,.5)}
 .item-icon{width:44px;height:44px;margin:0 auto 4px;border:1px solid #00d5ff;border-radius:10px;display:grid;place-items:center;font-size:20px;box-shadow:0 0 8px #00d5ff}
-.action-sheet{position:fixed;bottom:0;left:0;right:0;background:rgba(2,15,35,.98);border:1.5px solid #00d5ff;border-bottom:none;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom));transform:translateY(100%);transition:.3s;z-index:101}
-.action-sheet.show{transform:translateY(0)}
 .action-sheet button{width:100%;padding:14px;background:rgba(0,40,80,.6);border:1px solid rgba(0,213,255,.3);border-radius:12px;color:#7de8ff;margin-bottom:8px;font-size:14px;cursor:pointer}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;z-index:99}.overlay.show{display:block}
 </style>
@@ -49,27 +48,23 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 
 <div class="header">
 <div class="logo">⬡</div>
-<div><h1>POP ALMOZAG AI</h1><div class="status">● متصل • نشط الآن • AI World</div></div>
+<div><h1>POP ALMOZAG AI</h1><div class="status">● متصل • نشط الآن • مضاد الليميت</div></div>
 </div>
 
-<div class="chat" id="chat">
-<div class="bubble bot">أهلا يا ملك! أنا POP ALMOZAG AI 👑<br>بتكلم كل لغات العالم، دوس على أي رسالة هتلاقي نسخ ورد وحذف!</div>
-</div>
+<div class="chat" id="chat"></div>
 
 <div class="input-wrap">
-<div class="reply-bar" id="replyBar"><span id="replyText"></span><span onclick="cancelReply()" style="cursor:pointer;padding:0 6px">✕</span></div>
+<div class="reply-bar" id="replyBar"><span id="replyText"></span><span onclick="cancelReply()" style="cursor:pointer">✕</span></div>
 <div class="input-area">
 <button class="plus" onclick="openMenu()">+</button>
 <input id="inp" placeholder="اكتب رسالتك...">
 <button class="mic" id="micBtn" onclick="startVoice()">🎙️</button>
-<button class="send" onclick="send()">➤</button>
+<button class="send" id="sendBtn" onclick="send()">➤</button>
 </div>
 </div>
 
 <div class="overlay" id="over" onclick="closeAll()"></div>
-
-<div class="menu" id="menu">
-<div style="width:40px;height:4px;background:#00d5ff;margin:0 auto 12px;border-radius:10px"></div>
+<div class="menu" id="menu"><div style="width:40px;height:4px;background:#00d5ff;margin:0 auto 12px;border-radius:10px"></div>
 <div class="grid">
 <div class="item" onclick="pick('img')"><div class="item-icon">🖼️</div>المعرض</div>
 <div class="item" onclick="pick('cam')"><div class="item-icon">📷</div>الكاميرا</div>
@@ -77,13 +72,11 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 <div class="item" onclick="pick('music')"><div class="item-icon">🎵</div>موسيقى</div>
 <div class="item" onclick="doAction('location')"><div class="item-icon">📍</div>الموقع</div>
 <div class="item" onclick="doAction('contact')"><div class="item-icon">👤</div>جهة اتصال</div>
-</div>
-</div>
-
+</div></div>
 <div class="action-sheet" id="actionSheet">
 <button onclick="copyMsg()">📋 نسخ</button>
-<button onclick="replyMsg()">↩️ رد على الرسالة</button>
-<button onclick="delMsg()" style="color:#ff6b6b">🗑️ حذف الرسالة</button>
+<button onclick="replyMsg()">↩️ رد</button>
+<button onclick="delMsg()" style="color:#ff6b6b">🗑️ حذف</button>
 <button onclick="closeAll()" style="background:transparent;border:none">إلغاء</button>
 </div>
 
@@ -94,58 +87,76 @@ body::before{content:'';position:absolute;inset:0;background:radial-gradient(cir
 
 <script>
 let chatEl=document.getElementById('chat'), inpEl=document.getElementById('inp'), currentMsg=null, replyTo=null;
+let isWaiting=false, queue=[];
 
-function openMenu(){document.getElementById('menu').classList.add('show');over.classList.add('show')}
+function openMenu(){menu.classList.add('show');over.classList.add('show')}
 function closeAll(){menu.classList.remove('show');actionSheet.classList.remove('show');over.classList.remove('show')}
 function pick(t){closeAll(); if(t=='img')imgInp.click(); if(t=='cam')camInp.click(); if(t=='file')fileInp.click(); if(t=='music')musicInp.click();}
-function doAction(t){closeAll(); if(t=='location')addBubble('📍 الموقع: الإسكندرية، مصر','user'); if(t=='contact')addBubble('👤 POP ALMOZAG - @almozag11alsks7','user');}
-
-imgInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; let url=URL.createObjectURL(f); if(f.type.startsWith('video')) addBubble(`<video controls src="${url}" style="max-width:100%;border-radius:10px"></video>`,'user'); else addBubble(`<img src="${url}" style="max-width:100%;border-radius:10px"><br>🖼️ ${f.name}`,'user');};
+function doAction(t){closeAll(); if(t=='location')addBubble('📍 الإسكندرية','user'); if(t=='contact')addBubble('👤 POP ALMOZAG','user');}
+imgInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; let u=URL.createObjectURL(f); addBubble(f.type.startsWith('video')?`<video controls src="${u}" style="max-width:100%;border-radius:10px"></video>`:`<img src="${u}" style="max-width:100%;border-radius:10px">`,'user');};
 camInp.onchange=imgInp.onchange;
-fileInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; addBubble(`📄 ملف: ${f.name}`,'user');};
-musicInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; let url=URL.createObjectURL(f); addBubble(`🎵 ${f.name}<br><audio controls src="${url}" style="width:100%;margin-top:6px"></audio>`,'user');};
+fileInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; addBubble(`📄 ${f.name}`,'user');};
+musicInp.onchange=e=>{let f=e.target.files[0]; if(!f)return; let u=URL.createObjectURL(f); addBubble(`🎵 ${f.name}<br><audio controls src="${u}" style="width:100%"></audio>`,'user');};
 
 function msgAction(el){currentMsg=el; actionSheet.classList.add('show');over.classList.add('show')}
 function copyMsg(){if(currentMsg){let t=currentMsg.cloneNode(true); t.querySelectorAll('.time-row,.reply-preview').forEach(x=>x.remove()); navigator.clipboard.writeText(t.innerText.trim());} closeAll();}
-function replyMsg(){if(currentMsg){let txt=currentMsg.cloneNode(true); txt.querySelectorAll('.time-row,.reply-preview').forEach(x=>x.remove()); let t=txt.innerText.trim().substring(0,35); replyTo=t; replyText.innerText='رد على: '+t; replyBar.classList.add('show'); inpEl.focus();} closeAll();}
+function replyMsg(){if(currentMsg){let txt=currentMsg.cloneNode(true); txt.querySelectorAll('.time-row,.reply-preview').forEach(x=>x.remove()); replyTo=txt.innerText.trim().substring(0,35); replyText.innerText='رد على: '+replyTo; replyBar.classList.add('show'); inpEl.focus();} closeAll();}
 function cancelReply(){replyTo=null; replyBar.classList.remove('show')}
 function delMsg(){if(currentMsg)currentMsg.remove(); closeAll();}
 
-async function send(){
-let t=inpEl.value.trim(); if(!t)return;
-let extra = replyTo ? `<div class="reply-preview">↩️ ${replyTo}</div>` : '';
-addBubble(extra+t,'user'); inpEl.value=''; cancelReply();
-let id='tmp'+Date.now(); addBubble('يكتب الآن...','bot',id);
-try{
-let sys="You are POP ALMOZAG AI, chatty friend, detect language and reply same language. Arabic = Egyptian dialect ya malek, support all languages, casual.";
-let r=await fetch('https://text.pollinations.ai/'+encodeURIComponent(t)+'?system='+encodeURIComponent(sys));
-let a=await r.text(); document.getElementById(id)?.remove(); addBubble(a,'bot');
-}catch{document.getElementById(id)?.remove(); addBubble('النت فصل يا ملك جرب تاني','bot');}
+async function getAI(prompt){
+let sys="You are POP ALMOZAG AI, Egyptian friendly, reply same language as user. If Arabic use Egyptian dialect ya malek, casual, all languages.";
+let url=`https://text.pollinations.ai/${encodeURIComponent(prompt)}?system=${encodeURIComponent(sys)}&model=openai&seed=${Date.now()}`;
+let r=await fetch(url);
+let txt=await r.text();
+if(txt.toLowerCase().includes("free limit") || txt.toLowerCase().includes("unlimited replies")) throw new Error("LIMIT");
+return txt;
 }
+
+async function send(){
+let t=inpEl.value.trim(); if(!t) return;
+if(isWaiting){queue.push(t); addBubble(t,'user'); inpEl.value=''; addBubble('⏳ يا ملك ثانية واحدة بظبط اللي قبلي وهرد عليك على طول','bot'); return;}
+let extra=replyTo?`<div class="reply-preview">↩️ ${replyTo}</div>`:'';
+addBubble(extra+t,'user'); inpEl.value=''; cancelReply();
+let id='tmp'+Date.now(); addBubble('يكتب الآن...','bot',id); sendBtn.disabled=true;
+
+try{
+let ans=await getAI(t);
+document.getElementById(id)?.remove(); addBubble(ans,'bot'); sendBtn.disabled=false;
+}catch(e){
+document.getElementById(id)?.remove();
+if(e.message==="LIMIT"){
+isWaiting=true; sendBtn.disabled=true;
+let sec=15; let wrapId='count'+Date.now();
+addBubble(`⚠️ السيرفر المجاني زحمة شوية يا ملك، هحاول تاني لوحدي بعد <b id="${wrapId}" style="color:#00d5ff;font-size:16px">${sec}</b> ثانية...`,'bot','wrap-'+wrapId);
+let timer=setInterval(()=>{
+sec--; let el=document.getElementById(wrapId); if(el) el.innerText=sec;
+if(sec<=0){
+clearInterval(timer);
+document.getElementById('wrap-'+wrapId)?.remove();
+isWaiting=false; sendBtn.disabled=false;
+inpEl.value=t; send();
+if(queue.length>0){setTimeout(()=>{inpEl.value=queue.shift(); send();},1200);}
+}
+},1000);
+}else{
+addBubble('النت علق يا ملك جرب تاني','bot'); sendBtn.disabled=false;
+}
+}
+}
+
 function addBubble(t,type,id){
 let d=document.createElement('div'); d.className='bubble '+type; if(id)d.id=id;
 let tm=new Date(); let time=tm.getHours().toString().padStart(2,'0')+':'+tm.getMinutes().toString().padStart(2,'0');
-let readHTML='';
-if(type==='user'){readHTML=`<span class="read single" id="r-${Date.now()}">✓</span><span class="read-text"> إرسال</span>`;}
-else{readHTML=`<span class="read single">✓✓</span>`;}
+let readHTML=type==='user'?`<span class="read single">✓</span><span class="read-text"> إرسال</span>`:`<span class="read">✓✓</span>`;
 d.innerHTML=t+`<div class="time-row"><span class="time">${time}</span>${readHTML}</div>`;
-d.onclick=()=>msgAction(d);
-chatEl.appendChild(d); chatEl.scrollTop=chatEl.scrollHeight;
-// تحويل علامة الإرسال لمقروءة
-if(type==='user'){
-let rIcon=d.querySelector('.read');
-setTimeout(()=>{if(rIcon){rIcon.innerText='✓✓'; rIcon.className='read readed'; rIcon.nextElementSibling.innerText=' مقروءة';}}, 600);
+d.onclick=()=>msgAction(d); chatEl.appendChild(d); chatEl.scrollTop=chatEl.scrollHeight;
+if(type==='user'){let r=d.querySelector('.read'); setTimeout(()=>{if(r){r.innerText='✓✓'; r.className='read readed'; r.nextElementSibling.innerText=' مقروءة';}},700);}
 }
-}
-function startVoice(){
-let SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){alert('افتح من Chrome');return;}
-let rec=new SR(); rec.lang=navigator.language||'ar-EG'; rec.start(); micBtn.innerText='🔴';
-rec.onresult=e=>{inpEl.value=e.results[0][0].transcript; micBtn.innerText='🎙️'; send();};
-rec.onend=()=>micBtn.innerText='🎙️'; rec.onerror=()=>micBtn.innerText='🎙️';
-}
-inpEl.addEventListener('keypress',e=>{if(e.key==='Enter')send()});
-// أول رسالة بعلامة قراءة
-document.querySelectorAll('.bubble').forEach(b=>{b.onclick=()=>msgAction(b); if(!b.querySelector('.time-row')){let tm=new Date(); let time=tm.getHours()+':'+String(tm.getMinutes()).padStart(2,'0'); b.innerHTML+=`<div class="time-row"><span class="time">${time}</span><span class="read readed">✓✓</span><span class="read-text"> مقروءة</span></div>`}});
+
+function startVoice(){let SR=window.SpeechRecognition||window.webkitSpeechRecognition; if(!SR){alert('افتح كروم');return;} let rec=new SR(); rec.lang=navigator.language||'ar-EG'; rec.start(); micBtn.innerText='🔴'; rec.onresult=e=>{inpEl.value=e.results[0][0].transcript; micBtn.innerText='🎙️'; send();}; rec.onend=()=>micBtn.innerText='🎙️';}
+inpEl.addEventListener('keypress',e=>{if(e.key==='Enter')send();});
+addBubble('أهلا يا ملك! أنا POP ALMOZAG AI 👑<br>صلحتلك مشكلة الليميت، لو السيرفر زحمة هعد لوحدي وارجع ارد عليك، ومش هتشوف رسالة الرخمة دي تاني!','bot');
 </script>
 </body>
 </html>
