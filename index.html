@@ -3,52 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#00d4ff">
-<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUE9QIEFMTU9aQUcgQUkiLCJzaG9ydF9uYW1lIjoiUE9QIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMTBhMWUiLCJ0aGVtZV9jb2xvciI6IiMwMGQ0ZmYiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9jZG4taWNvbnMtcG5nLmZsYXRpY29uLmNvbS81MTIvMjEwMy8yMTAzNjM3LnBuZyIsInNpemVzIjoiNTEyeDUxMiIsInR5cGUiOiJpbWFnZS9wbmcifV19">
-<title>POP ALMOZAG AI 👑 - ULTIMATE</title>
+<title>POP ALMOZAG AI 👑</title>
 <style>
 :root{--main:#00d4ff;--bg:#010a1e;--card:#0a234a;--input:#001e3d}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100dvh}
-body{background:var(--bg);color:#fff;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;overflow:hidden;transition:.3s}
-.bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;color:rgba(0,212,255,0.06);transform:rotate(-28deg);letter-spacing:10px;pointer-events:none;z-index:0;user-select:none}
-.header{padding:10px 12px;text-align:center;border-bottom:2px solid var(--main);background:#001233;z-index:2;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+body{background:var(--bg);color:#fff;font-family:'Segoe UI',sans-serif;display:flex;flex-direction:column;height:100dvh;overflow:hidden;transition:.3s}
+.bg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;font-weight:900;color:rgba(0,212,255,0.06);transform:rotate(-28deg);pointer-events:none;z-index:0}
+.header{padding:12px;border-bottom:2px solid var(--main);background:#001233;z-index:2;display:flex;justify-content:space-between;align-items:center}
 .header h1{color:var(--main);font-size:18px}
-.header .left{display:flex;gap:6px}
-.hbtn{background:#0a1e3a;border:1px solid var(--main);color:var(--main);font-size:11px;padding:5px 9px;border-radius:12px;cursor:pointer}
-.chat{flex:1;overflow-y:auto;padding:12px 12px 20px;max-width:1400px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:10px;z-index:2}
-.msg{max-width:86%;padding:12px 16px;border-radius:18px;line-height:1.7;font-size:14px;white-space:pre-wrap;word-break:break-word;cursor:pointer;position:relative}
+.hbtn{background:#0a1e3a;border:1px solid var(--main);color:var(--main);padding:6px 10px;border-radius:12px;cursor:pointer;font-size:12px}
+.chat{flex:1;overflow-y:auto;padding:12px;max-width:1400px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:10px;z-index:2}
+.msg{max-width:86%;padding:12px 16px;border-radius:18px;line-height:1.7;font-size:14px;white-space:pre-wrap;word-break:break-word;cursor:pointer}
 .msg.user{align-self:flex-start;background:linear-gradient(135deg,var(--main),#0066ff)}
-.msg.bot{align-self:flex-end;background:var(--card);border:1px solid rgba(0,212,255,0.2)}
-.msg.bot .actions{margin-top:8px;display:flex;gap:6px}
-.msg.bot .actions button{font-size:10px;padding:4px 8px;border-radius:10px;border:1px solid var(--main);background:transparent;color:var(--main);cursor:pointer}
-.msg img{max-width:220px;border-radius:12px;margin-top:8px;display:block;border:2px solid var(--main)}
+.msg.bot{align-self:flex-end;background:var(--card);border:1px solid #ffffff22}
+.msg img{max-width:200px;border-radius:12px;margin-top:8px;display:block;border:2px solid var(--main)}
 .bottom{flex-shrink:0;background:#00102a;border-top:2px solid var(--main);padding:8px 8px max(8px,env(safe-area-inset-bottom));z-index:999}
 .bar{max-width:1400px;margin:0 auto;display:flex;gap:8px;align-items:center;width:100%}
-.icon{width:42px;height:42px;flex-shrink:0;background:#0a1e3a;border:1px solid var(--main);border-radius:50%;color:var(--main);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px}
-.box{flex:1;background:var(--input);border:2px solid var(--main);border-radius:24px;padding:8px 14px;display:flex;min-height:44px;max-height:110px}
-.box textarea{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;resize:none;height:22px;max-height:90px;font-family:inherit}
-.send{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--main),#0066ff);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.send.rec{animation:pulse 1s infinite;background:linear-gradient(135deg,#ff0044,#aa0033)}
+.icon{width:42px;height:42px;flex-shrink:0;background:#0a1e3a;border:1px solid var(--main);border-radius:50%;color:var(--main);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.box{flex:1;background:var(--input);border:2px solid var(--main);border-radius:24px;padding:8px 14px;display:flex;min-height:44px}
+.box textarea{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:15px;resize:none;height:22px;font-family:inherit}
+.send{width:46px;height:46px;flex-shrink:0;background:linear-gradient(135deg,var(--main),#0066ff);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer}
+.send.rec{background:linear-gradient(135deg,#ff0044,#aa0033);animation:pulse 1s infinite}
 @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
 .preview{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-.preview img{width:70px;height:70px;object-fit:cover;border-radius:10px;border:2px solid var(--main)}
-.keyBox,.themeBox{position:fixed;top:60px;left:10px;right:10px;max-width:400px;margin:auto;background:#001a3a;border:2px solid var(--main);border-radius:15px;padding:14px;z-index:10000;display:none}
-.keyBox input{width:100%;padding:10px;border-radius:10px;border:1px solid #00d4ff55;background:#000e2a;color:#fff;margin:8px 0}
-.keyBox button,.themeBox button{width:100%;padding:10px;background:linear-gradient(135deg,var(--main),#0066ff);border:none;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;margin-top:6px}
-.themes{display:flex;gap:8px;margin-top:10px}
-.themes div{width:35px;height:35px;border-radius:50%;cursor:pointer;border:2px solid #fff}
+.preview img{width:65px;height:65px;object-fit:cover;border-radius:10px;border:2px solid var(--main)}
+.popup{position:fixed;top:60px;left:10px;right:10px;max-width:400px;margin:auto;background:#001a3a;border:2px solid var(--main);border-radius:15px;padding:14px;z-index:10000;display:none}
+.popup input{width:100%;padding:10px;border-radius:10px;border:1px solid #ffffff33;background:#000e2a;color:#fff;margin:8px 0}
+.popup button{width:100%;padding:10px;background:linear-gradient(135deg,var(--main),#0066ff);border:none;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;margin-top:6px}
+.themes{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.themes div{width:38px;height:38px;border-radius:50%;cursor:pointer;border:2px solid #fff}
 </style>
 </head>
 <body>
 <div class="bg">POP ALMOZAG AI</div>
 <div class="header">
 <h1>👑 POP ALMOZAG AI</h1>
-<div class="left">
-<button class="hbtn" onclick="document.getElementById('themeBox').style.display='block'">🎨</button>
+<div style="display:flex;gap:6px">
+<button class="hbtn" onclick="openTheme()">🎨</button>
 <button class="hbtn" onclick="exportChat()">📄</button>
-<button class="hbtn" onclick="document.getElementById('keyBox').style.display='block'">⚙️</button>
-<button class="hbtn" onclick="if(confirm('امسح الشات؟')){localStorage.removeItem('pop_chat');location.reload()}">🗑️</button>
+<button class="hbtn" onclick="openKey()">⚙️</button>
+<button class="hbtn" onclick="clearChat()">🗑️</button>
 </div>
 </div>
 <div class="chat" id="chat"></div>
@@ -57,23 +51,87 @@ body{background:var(--bg);color:#fff;font-family:'Segoe UI',sans-serif;display:f
 <div class="bar">
 <button class="send" id="mainBtn">🎤</button>
 <div class="box"><textarea id="inp" placeholder="اكتب أو دوس ميك..."></textarea></div>
-<button class="icon" onclick="fileInp.click()">📷</button>
-<button class="icon" onclick="fileInp.click()">📎</button>
+<button class="icon" id="camBtn">📷</button>
+<button class="icon" id="fileBtn">📎</button>
 </div>
 </div>
 
-<div class="keyBox" id="keyBox">
-<h3 style="font-size:13px">🔑 مفتاح Gemini مجاني</h3>
-<p style="font-size:11px;color:#aaa">aistudio.google.com/app/apikey</p>
+<div class="popup" id="keyBox">
+<h3>🔑 مفتاح Gemini</h3>
+<p style="font-size:11px;color:#aaa">من aistudio.google.com/app/apikey</p>
 <input id="keyInp" placeholder="AIza...">
 <button onclick="saveKey()">حفظ ✅</button>
-<button onclick="this.parentElement.style.display='none'" style="background:#333">إغلاق</button>
+<button onclick="closePop('keyBox')" style="background:#333">إغلاق</button>
 </div>
 
-<div class="themeBox" id="themeBox">
-<h3 style="font-size:13px">🎨 اختار لون الشات</h3>
+<div class="popup" id="themeBox">
+<h3>🎨 اختار اللون</h3>
 <div class="themes">
-<div style="background:#00d4ff" onclick="setTheme('#00d4ff','#010a1e','#0a234a','#001e3d')"></div>
-<div style="background:#a855f7" onclick="setTheme('#a855f7','#0f031f','#2a1450','#1e1040')"></div>
-<div style="background:#22c55e" onclick="setTheme('#22c55e','#02120a','#0f2a1a','#0a1f14')"></div>
-<div style="background:#f59e0b" onclick="setTheme('#f59e0b','#1a100
+<div style="background:#00d4ff" onclick="changeTheme('#00d4ff','#010a1e','#0a234a','#001e3d')"></div>
+<div style="background:#a855f7" onclick="changeTheme('#a855f7','#0f031f','#2a1450','#1e1040')"></div>
+<div style="background:#22c55e" onclick="changeTheme('#22c55e','#02120a','#0f2a1a','#0a1f14')"></div>
+<div style="background:#f59e0b" onclick="changeTheme('#f59e0b','#1a1000','#3a2500','#2a1a00')"></div>
+<div style="background:#ef4444" onclick="changeTheme('#ef4444','#1a0505','#3a0a0a','#2a0808')"></div>
+</div>
+<button onclick="closePop('themeBox')" style="background:#333;margin-top:12px">إغلاق</button>
+</div>
+
+<input type="file" id="fileInp" accept="image/*" multiple style="display:none">
+
+<script>
+var chat = document.getElementById('chat');
+var inp = document.getElementById('inp');
+var preview = document.getElementById('preview');
+var fileInp = document.getElementById('fileInp');
+var mainBtn = document.getElementById('mainBtn');
+var apiKey = localStorage.getItem('GEMINI_KEY') || '';
+document.getElementById('keyInp').value = apiKey;
+var images = [];
+var isRec = false;
+var recognition = null;
+var msgs = JSON.parse(localStorage.getItem('pop_chat') || '[]');
+
+function openKey(){document.getElementById('keyBox').style.display='block';}
+function openTheme(){document.getElementById('themeBox').style.display='block';}
+function closePop(id){document.getElementById(id).style.display='none';}
+function saveKey(){var k=document.getElementById('keyInp').value.trim();if(k){localStorage.setItem('GEMINI_KEY',k);apiKey=k;alert('تم حفظ المفتاح 👑');closePop('keyBox');}}
+function saveChat(){localStorage.setItem('pop_chat', JSON.stringify(msgs));}
+function clearChat(){if(confirm('امسح كل الرسايل؟')){localStorage.removeItem('pop_chat');msgs=[];renderAll();}}
+function exportChat(){var txt=msgs.map(m=> (m.role=='user'?'انت: ':'POP: ')+m.text).join('\n\n');var blob=new Blob([txt],{type:'text/plain'});var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='POP-Chat.txt';a.click();}
+function speakText(t){if('speechSynthesis' in window){window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='ar-EG';u.rate=0.95;window.speechSynthesis.speak(u);}}
+function copyText(t){navigator.clipboard.writeText(t).then(()=>{alert('اتنسخ ✅');});}
+function changeTheme(main,bg,card,input){document.documentElement.style.setProperty('--main',main);document.documentElement.style.setProperty('--bg',bg);document.documentElement.style.setProperty('--card',card);document.documentElement.style.setProperty('--input',input);localStorage.setItem('pop_theme',JSON.stringify({main,bg,card,input}));closePop('themeBox');}
+var savedTheme = JSON.parse(localStorage.getItem('pop_theme')||'null'); if(savedTheme){changeTheme(savedTheme.main,savedTheme.bg,savedTheme.card,savedTheme.input);}
+
+document.getElementById('fileBtn').onclick = function(){fileInp.click();};
+document.getElementById('camBtn').onclick = function(){fileInp.click();};
+
+fileInp.onchange = function(e){
+ var files = e.target.files;
+ for(var i=0;i<files.length;i++){
+  (function(f){
+   var r=new FileReader();
+   r.onload=function(ev){
+    var full=ev.target.result;
+    var parts=full.split(',');
+    var mime=parts[0].split(':')[1].split(';')[0];
+    images.push({data:parts[1], mime:mime, url:full});
+    var im=document.createElement('img'); im.src=full; preview.appendChild(im);
+    updateBtn();
+   };
+   r.readAsDataURL(f);
+  })(files[i]);
+ }
+ fileInp.value='';
+};
+
+function renderAll(){
+ chat.innerHTML='';
+ if(msgs.length==0){
+  var d=document.createElement('div'); d.className='msg bot'; d.innerHTML='أهلاً يا ملك 👑<br>أنا POP ALMOZAG AI خبير AI شامل<br><br>🎨 لتغيير اللون دوس فوق<br>📷📎 لرفع صورة دوس تحت<br>🎤 دوس ميك وتكلم<br>دوس على الرسالة تنسخ'; chat.appendChild(d);
+ }else{
+  msgs.forEach(function(m){
+   var d=document.createElement('div'); d.className='msg '+m.role; d.textContent=m.text;
+   d.onclick=function(){copyText(m.text);};
+   if(m.imgs){m.imgs.forEach(function(s){var im=document.createElement('img'); im.src=s; d.appendChild(im);});}
+   if(m.role=='bot'){var br=document.createElement('br'); d.appendChild(br); var b1=document.createElement('button'); b1.textContent='🔊 صوت'; b1.style.css
